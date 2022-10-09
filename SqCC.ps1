@@ -11,8 +11,18 @@
  #[Console.Window]::ShowWindow($consolePtr, 0)
 
  # ------------------------------------------------------------------------
+#Create the date, and log file path. Creates a new file depending on the day, can append events to these logs when running.
+ $todaysDate = Get-Date -Format "MM-dd-yyyy"
+ $currentTime = Get-Date -DisplayHint DateTime
+ $logFilePath = "logs\"+$todaysDate+".log"
 
- #Loop through all services to find the service passed into the function, aka srvName
+
+#Loop through all services to find the service passed into the function, aka srvName
+ function WriteToLogFile($message)
+ {
+    Write-Host "Log file created."
+    Add-Content $logFilePath -Value $message
+ }
  $highestMem = 0
  function Get-SqService($srvName)
 {
@@ -38,7 +48,6 @@
             #javaw process array
             $javawArr = @()
             $javawSrv = Get-Process | WHERE {$_.ProcessName -EQ "javaw"}
-            $javawSrv
 
             #add javaw processes into javaw array
             foreach($javaw in $javawSrv) {
@@ -62,29 +71,57 @@
                         Write-Host $highestMem "Needs to be killed" 
                     }
                     #kill the javaw process using the most memory
+                    try {
+                    WriteToLogFile "Attempting to restart $srvName service(s) at: $currentTime`n"
                     taskkill /IM javaw.exe /F | WHERE $javawSrv.WS = $highestMem
+                    Start-Sleep -Seconds 3
+                    Start-Service SqGateway
+                    Write-Host $srvName "service(s) restarted..."
+                    WriteToLogFile "$srvName service(s) restarted successfully."
+                    }
+                    catch [System.Management.Automation.ActionPreferenceStopException] {
+                        Write-Host [System.Management.Automation.ActionPreferenceStopException]
+                        WriteToLogFile "`nThere was an issue restarting the $srvName service at $currentTime`n" 
+                    }
                 } else {
                     #perform this if there is only one javaw
                     Write-Host "Only 1 javaw"
+                    WriteToLogFile "Attempting to restart $srvName service(s) at: $currentTime`n"
+                    try { 
                     taskkill /IM javaw.exe /F
                     Write-Host "Javaw.exe killed."
-                    Start-Sleep -Seconds 3
-                    Start-Service SqGateway
-                    $lblbody.Location= "100,150"
-                    Write-Host $srvName "service(s) restarted..."
+                    Start-Sleep -Seconds 3                   
+                        Start-Service SqGateway -ErrorAction Stop
+                        $lblbody.Location= "100,150"
+                        Write-Host $srvName "service(s) restarted..."
+                        WriteToLogFile "$srvName service(s) restarted successfully."
+                    }
+                    catch [System.Management.Automation.ActionPreferenceStopException] {
+                        Write-Host "There was an issue restarting the $srvName service."
+                        WriteToLogFile "There was an issue restarting the $srvName service at $currentTime`n"
+                    }
                 }
             }
         #perform this elseif when the service is not SqGateway
         elseif($srvName -NE "SqGateway") {
+            WriteToLogFile "Attempting to restart $srvName service(s) at: $currentTime`n"
             $lbltitle.Text="Restarting services, please wait"
             $lbltitle.Location = "125, 100"
             $lblbody.Location= "100,150"
             Start-Sleep -Seconds 1
             Write-Host "Restarting $srvName service(s)..."
-            Stop-Service -Force $services
-            Start-Sleep -Seconds 2
-            Start-Service $services
-            Write-Host $srvName" service(s) restarted..."
+            try {
+                Stop-Service -Force $services
+                Start-Sleep -Seconds 2
+                Start-Service $services -ErrorAction Stop
+                Write-Host $srvName" service(s) restarted..."
+                WriteToLogFile "$srvName service(s) restarted successfully.`n"
+            } 
+            catch [System.Management.Automation.ActionPreferenceStopException]{
+                Write-Host "There was an issue restarting the $srvName service at $currentTime."
+                WriteToLogFile "There was an issue restarting the $srvName service at $currentTime`n"
+            }
+
         } else  {
             Write-Host "An error has occurred..."
         }
@@ -150,8 +187,9 @@ function SqServiceList ()
     Get-SqService "CRM"
     Get-SqService "Paytronix"
     Get-SqService "SquirrelPXC"
-    Get-SqService "SquirrelRelayBuyatab"
+    Get-SqService "SquirrelRelayBuyATab"
     Get-SqService "SqMatrix"
+    WriteToLogFile "`n-------------------------------------------------------`n"
     
     Start-Sleep -Seconds 2
     Write-Host "Confirm if CCs are working -- YES or NO"
