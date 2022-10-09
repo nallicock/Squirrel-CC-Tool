@@ -1,5 +1,20 @@
-#Loop through all services to find the service passed into the function, aka srvName
-function Get-SqService($srvName)
+ # Remove comment '#' for lines 3-11 to make the Console window disappear.
+# ------------------------------------------------------------------------
+ #Add-Type -Name Window -Namespace Console -MemberDefinition '
+ #[DllImport("Kernel32.dll")]
+ #public static extern IntPtr GetConsoleWindow();
+
+#[DllImport("user32.dll")]
+#public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);
+#'
+ #$consolePtr = [Console.Window]::GetConsoleWindow()
+ #[Console.Window]::ShowWindow($consolePtr, 0)
+
+ # ------------------------------------------------------------------------
+
+ #Loop through all services to find the service passed into the function, aka srvName
+$highestMem = 0
+ function Get-SqService($srvName)
 {
     #after starting the script, remove the start button from screen
     $btnStart.Visible=$false
@@ -18,13 +33,48 @@ function Get-SqService($srvName)
             Write-Host "Please wait... restarting SqGateway"
             $lbltitle.Text="Restarting services, please wait"
             $lbltitle.Location = "125, 100"
-            taskkill /IM javaw.exe /F
-            Write-Host "Javaw.exe killed."
-            Start-Sleep -Seconds 3
-            Start-Service SqGateway
-            $lblbody.Location= "100,150"
-            Write-Host $srvName "service(s) restarted..."
-        }
+            #begin testing to see if there are more than 1 javaw's(Giordanos has more than 1 javaw)
+
+            #javaw process array
+            $javawArr = @()
+            $javawSrv = Get-Process | WHERE {$_.ProcessName -EQ "javaw"}
+            $javawSrv
+
+            #add javaw processes into javaw array
+            foreach($javaw in $javawSrv) {
+                $javawArr += $javaw
+            }
+            #if there is more than one javaw execute the following
+                if ($javawArr[1]) {
+                    Write-Host "More than 1 javaw"
+                    #loop through each process in the javawArr and determine which is the biggest
+                    #the biggest requires a restart, as that is the SqGateway
+                    foreach($item in $javawArr) {
+                        Write-Host $item.WS
+                        #while looping through the array, if a javaw process uses more memory, assign that to highestMem
+                        if($item.WS -GT $highestMem) {
+                            Write-Host $item.WS
+                            $highestMem = $item.WS
+                            Write-Host $highestMem "is the new highest memory javaw usage."
+                        }  else {
+                            Write-Host "!!! NOT HIGHER THAN HIGHEST JAVAW MEMORY !!!"
+                        }
+                        Write-Host $highestMem "Needs to be killed" 
+                    }
+                    #kill the javaw process using the most memory
+                    taskkill /IM javaw.exe /F | WHERE $javawSrv.WS = $highestMem
+                } else {
+                    #perform this if there is only one javaw
+                    Write-Host "Only 1 javaw"
+                    taskkill /IM javaw.exe /F
+                    Write-Host "Javaw.exe killed."
+                    Start-Sleep -Seconds 3
+                    Start-Service SqGateway
+                    $lblbody.Location= "100,150"
+                    Write-Host $srvName "service(s) restarted..."
+                }
+            }
+        #perform this elseif when the service is not SqGateway
         elseif($srvName -NE "SqGateway") {
             $lbltitle.Text="Restarting services, please wait"
             $lbltitle.Location = "125, 100"
@@ -39,7 +89,7 @@ function Get-SqService($srvName)
             Write-Host "An error has occurred..."
         }
         Start-Sleep -Seconds 1
-}
+    }
 #remove all buttons from screen for a cleaner appearance
 function NoButtons()
 {
@@ -87,12 +137,12 @@ function ClearList()
 #check if the service is installed, and if it is, restart it (see the very top function, Get-SqService)
 function SqServiceList ()
 {
-    Get-SqService "Shift4"
-    Get-SqService "TGI"
+    # Get-SqService "Shift4"
+    # Get-SqService "TGI"
     Get-SqService "SqGateway"
-    Get-SqService "Moneris"
-    Get-SqService "STPI"
-    Get-SqService "Stunnel"
+    # Get-SqService "Moneris"
+    # Get-SqService "STPI"
+    # Get-SqService "Stunnel"
     Start-Sleep -Seconds 2
     Write-Host "Confirm if CCs are working -- YES or NO"
     $lbltitle.Text = "Squirrel Systems CC GUI"
@@ -107,11 +157,12 @@ function SqServiceList ()
 
 Add-Type -AssemblyName System.Windows.Forms
 
+#CREATE OBJECTS
 $FormObject = [System.Windows.Forms.Form]
 $LabelObject = [System.Windows.Forms.Label]
 $ButtonObject = [System.Windows.Forms.Button]
 
-#links
+#link GUI info
 $SupportLabel = New-Object System.Windows.Forms.LinkLabel
 $SupportLabel.Size = New-Object System.Drawing.Size(375,20)
 $SupportLabel.Location = New-Object System.Drawing.Size(400,183)
@@ -142,7 +193,7 @@ $LogMeInLabel.Text = "https://secure.logmeinrescue.com/Customer/Code.aspx"
 $LogMeInLabel.Font="Verdana,10,style=Bold"
 $LogMeInLabel.add_Click({[system.Diagnostics.Process]::start("https://secure.logmeinrescue.com/Customer/Code.aspx")})
 
-#WINDOW
+#WINDOW GUI info
 $HelloWorldForm = New-Object $FormObject
 $HelloWorldForm.ClientSize = '800,600'
 $HelloWorldForm.Text = "Squirrel Systems - CC GUI Test"
@@ -177,12 +228,6 @@ $btnStart.ForeColor = "WHITE"
 $btnStart.Location=New-Object System.Drawing.Point(275,150)
 $btnStart.Font="Verdana,25,style=Bold"
 
-$btnOk=New-Object $ButtonObject
-$btnOk.Text = "OK"
-$btnOk.AutoSize=$true
-$btnOk.Visible = $false
-$btnOk.Location=New-Object System.Drawing.Point(375,150)
-
 #YES BUTTON
 $btnYes=New-Object $ButtonObject
 $btnYes.ForeColor = "White"
@@ -203,8 +248,10 @@ $btnNo.Visible = $false
 $btnNo.Location=New-Object System.Drawing.Point(500,150)
 $btnNo.Font="Verdana,20,style=Bold"
 
-$HelloWorldForm.Controls.AddRange(@($lbltitle, $btnYes, $btnNo, $btnOk, $btnStart, $lblbody, $SupportLabel, $HelpCenterLabel, $LogMeInLabel))
+$HelloWorldForm.Controls.AddRange(@($lbltitle, $btnYes, $btnNo, $btnStart, $lblbody, $SupportLabel, $HelpCenterLabel, $LogMeInLabel))
 
+#BTN start is visible right away when opening the GUI. Executes the SqServiceList function when clicked
+#This is also the start of the program.
 $btnStart.Add_Click({ SqServiceList })
 
 $HelloWorldForm.ShowDialog()
