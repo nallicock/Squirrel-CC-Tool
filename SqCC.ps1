@@ -78,8 +78,8 @@
         elseif($srvName -NE "SqGateway") {
             $lbltitle.Text="Restarting services, please wait"
             $lbltitle.Location = "125, 100"
-            Start-Sleep -Seconds 1
             $lblbody.Location= "100,150"
+            Start-Sleep -Seconds 1
             Write-Host "Restarting $srvName service(s)..."
             Stop-Service -Force $services
             Start-Sleep -Seconds 2
@@ -117,7 +117,7 @@ function YesWorking()
      $SupportLabel.BringToFront()
      $SupportLabel.Visible = $true
      $SupportLabel.Location = "275, 167"
-     $lblbody.text = "If you would like to launch an investigation`nfor the root cause, please see: "
+     $lblbody.text = "If you would like to launch an investigation`nfor the root cause, please see:`nOr call us at: 1-800-288-8160"
      $lblbody.Font = "Verdana,10,style=Bold"
      $lblbody.Location = "50, 150"
      NoButtons
@@ -138,6 +138,21 @@ function SqServiceList ()
     Get-SqService "Moneris"
     Get-SqService "STPI"
     Get-SqService "Stunnel"
+    Get-SqService "SquirrelRelay53Bank"
+    Get-SqService "Elavon"
+    Get-SqService "SkyTab"
+    Get-SqService "eLaunch"
+    Get-SqService "Counter"
+    Get-SqService "PAX Agent Service"
+    Get-SqService "CayanService"
+    Get-SqService "FCCMiddleService"
+    Get-SqService "FreedomPay"
+    Get-SqService "CRM"
+    Get-SqService "Paytronix"
+    Get-SqService "SquirrelPXC"
+    Get-SqService "SquirrelRelayBuyatab"
+    Get-SqService "SqMatrix"
+    
     Start-Sleep -Seconds 2
     Write-Host "Confirm if CCs are working -- YES or NO"
     $lbltitle.Text = "Squirrel Systems Fix Utility"
