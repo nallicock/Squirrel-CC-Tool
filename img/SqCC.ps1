@@ -95,26 +95,29 @@ function NoButtons()
 {
     $btnYes.Visible = $false
     $btnNo.Visible = $false
+    $btnOk.Visible = $false
 }
 #Display the following if the user clicks NO for "Are your credit cards now working?"
 function NotWorking()
 {
     $SupportLabel.BringToFront()
     $lblbody.Font = "Verdana,10,style=Bold"
-    $lblbody.Location= "75,150"
+    $lblbody.Location= "100,150"
     $lbltitle.text = "Contact Support"
     $lbltitle.Location = "250, 100"
     $SupportLabel.Visible=$true
     $lblbody.text = 
     "Please call our Solution Center at: 1-800-288-8160 for further troubleshooting.
-    `nFor more ways of contacting support, see:" 
+    `nMore ways of contacting support, see:" 
     NoButtons
 }
 
 #Display the following if the user clicks YES for "Are your credit cards now working?"
 function YesWorking()
 {
+     $lbltitle.text = "Squirrel Systems"
      $SupportLabel.BringToFront()
+     $lbltitle.Location = "250, 100"
      $SupportLabel.Visible = $true
      $SupportLabel.Location = "275, 167"
      $lblbody.text = "If you would like to launch an investigation`nfor the root cause, please see: "
@@ -177,12 +180,12 @@ $HelloWorldForm.BackColor = "GRAY"
 $HelloWorldForm.StartPosition = 'CenterScreen'
 
 #BACKGROUND IMAGE
-$Image = [system.drawing.image]::FromFile("$PSScriptRoot\img\squirrel2.png") 
+$Image = [system.drawing.image]::FromFile("$PSScriptRoot\squirrel2.png") 
 $HelloWorldForm.BackgroundImage = $Image
 $HelloWorldForm.BackgroundImageLayout = "Center"
 
 #FORM ICON
-$sqIcon = [System.Drawing.Icon]::ExtractAssociatedIcon("$PSScriptRoot\img\squirrelicon2.ico")
+$sqIcon = [System.Drawing.Icon]::ExtractAssociatedIcon("$PSScriptRoot\squirrelicon2.ico")
 $HelloWorldForm.Icon = $sqIcon
 
 #TITLE
@@ -210,14 +213,15 @@ $btnStart.Text = "CLICK TO START CC FIX"
 $btnStart.ForeColor = "White"
 $btnStart.AutoSize=$false
 $btnStart.Size = "300,100"
-$btnStart.BackColor = "#333333"
+$btnStart.BackColor = "BLACK"
+$btnStart.ForeColor = "WHITE"
 $btnStart.Location=New-Object System.Drawing.Point(315,250)
 $btnStart.Font="Verdana,25,style=Bold"
 
 #YES BUTTON
 $btnYes=New-Object $ButtonObject
 $btnYes.ForeColor = "White"
-$btnYes.BackColor = "#333333"
+$btnYes.BackColor = "Black"
 $btnYes.Text = "YES"
 $btnYes.AutoSize=$false
 $btnYes.Size="200,75"
@@ -229,7 +233,7 @@ $btnYes.Font="Verdana,20,style=Bold"
 $btnNo=New-Object $ButtonObject
 $btnNo.Text = "NO"
 $btnNo.ForeColor = "White"
-$btnNo.BackColor = "#333333"
+$btnNo.BackColor = "Black"
 $btnNo.AutoSize=$false
 $btnNo.Size="200,75"
 $btnNo.Visible = $false
