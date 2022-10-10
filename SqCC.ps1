@@ -13,7 +13,6 @@
  # ------------------------------------------------------------------------
 #Create the date, and log file path. Creates a new file depending on the day, can append events to these logs when running.
  $todaysDate = Get-Date -Format "MM-dd-yyyy"
- $currentTime = Get-Date -DisplayHint DateTime
  $logFilePath = "logs\"+$todaysDate+".log"
 
 
@@ -26,6 +25,7 @@
  $highestMem = 0
  function Get-SqService($srvName)
 {
+    $currentTime = Get-Date -DisplayHint DateTime
     #after starting the script, remove the start button from screen
     $btnStart.Visible=$false
     $services = Get-Service -DisplayName *$srvName* 
