@@ -94,7 +94,7 @@
                         Start-Service SqGateway -ErrorAction Stop
                         $lblbody.Location= "100,150"
                         Write-Host $srvName "service(s) restarted..."
-                        WriteToLogFile "$srvName service(s) restarted successfully."
+                        WriteToLogFile "$srvName service(s) restarted successfully.`n"
                     }
                     catch [System.Management.Automation.ActionPreferenceStopException] {
                         Write-Host "There was an issue restarting the $srvName service."
