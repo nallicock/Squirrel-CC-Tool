@@ -24,9 +24,34 @@
  }
  $highestMem = 0
 
+ function Restarting-Services()
+ {
+    $lbltitle.Text="Restarting services, please wait"
+    $lbltitle.Location = "125, 100"
+ }
  function Home-Screen()
  {
+    $lbltitle.Text = "What Is Not Working?"
+    $lbltitle.Location = "250, 50"
+    $btnStart.Visible = $false
+    $btnYes.Visible = $false
+    $btnNo.Visible = $false
 
+    #btnCC Properties
+    $btnCC.Visible = $true
+    $btnCC.Location = "100, 100"
+
+    #btnQSR Properties
+    $btnQSR.Visible = $true
+    $btnQSR.Location = "600, 100"
+    
+    #btnOO Properties
+    $btnOO.Visible = $true
+    $btnOO.Location = "100, 350"
+
+    #btnTerm Properties
+    $btnTerm.Visible = $true
+    $btnTerm.Location = "600, 350"
  }
  function Get-SqService($srvName)
 {
@@ -46,8 +71,7 @@
         elseif ($srvName -EQ "SqGateway") {
             Start-Sleep -Seconds 1
             Write-Host "Please wait... restarting SqGateway"
-            $lbltitle.Text="Restarting services, please wait"
-            $lbltitle.Location = "125, 100"
+            Restarting-Services
             #begin testing to see if there are more than 1 javaw's(Giordanos has more than 1 javaw)
 
             #javaw process array
@@ -198,6 +222,7 @@ function SqCCService ()
     
     Start-Sleep -Seconds 2
     Write-Host "Confirm if CCs are working -- YES or NO"
+    
     $lbltitle.Text = "Squirrel Systems Fix Utility"
     $lblbody.Location = "150,425"
     $lblbody.Font="Verdana,15,style=Bold"
@@ -206,6 +231,11 @@ function SqCCService ()
     $btnNo.Visible = $true
     $btnYes.Add_Click({ YesWorking })
     $btnNo.Add_Click({ NotWorking })
+}
+
+function SqQSRService()
+{
+    Get-SqService "QSR"
 }
 
 Add-Type -AssemblyName System.Windows.Forms
@@ -264,7 +294,7 @@ $lblbody.Location=New-Object System.Drawing.Point(400,300)
 
 #START BUTTON
 $btnStart=New-Object $ButtonObject
-$btnStart.Text = "CLICK TO START CC FIX"
+$btnStart.Text = "Click to Start Quick Fix"
 $btnStart.ForeColor = "White"
 $btnStart.AutoSize=$false
 $btnStart.Size = "300,100"
@@ -296,7 +326,7 @@ $btnNo.Font="Verdana,20,style=Bold"
 
 #CC FIX BUTTON
 $btnCC=New-Object $ButtonObject
-$btnCC.Text = "NO"
+$btnCC.Text = "Credit Cards"
 $btnCC.ForeColor = "White"
 $btnCC.BackColor = "#333333"
 $btnCC.AutoSize=$false
@@ -306,8 +336,8 @@ $btnCC.Location=New-Object System.Drawing.Point(650,250)
 $btnCC.Font="Verdana,20,style=Bold"
 
 #QSR BUTTON
-$btnNo=New-Object $ButtonObject
-$btnQSR.Text = "NO"
+$btnQSR=New-Object $ButtonObject
+$btnQSR.Text = "Kitchen Screens"
 $btnQSR.ForeColor = "White"
 $btnQSR.BackColor = "#333333"
 $btnQSR.AutoSize=$false
@@ -318,7 +348,7 @@ $btnQSR.Font="Verdana,20,style=Bold"
 
 #ONLINE ORDER BUTTON
 $btnOO=New-Object $ButtonObject
-$btnOO.Text = "NO"
+$btnOO.Text = "Online Orders"
 $btnOO.ForeColor = "White"
 $btnOO.BackColor = "#333333"
 $btnOO.AutoSize=$false
@@ -329,7 +359,7 @@ $btnOO.Font="Verdana,20,style=Bold"
 
 #TERMINALS BUTTON
 $btnTerm=New-Object $ButtonObject
-$btnTerm.Text = "NO"
+$btnTerm.Text = "Terminals"
 $btnTerm.ForeColor = "White"
 $btnTerm.BackColor = "#333333"
 $btnTerm.AutoSize=$false
@@ -338,7 +368,7 @@ $btnTerm.Visible = $false
 $btnTerm.Location=New-Object System.Drawing.Point(650,250)
 $btnTerm.Font="Verdana,20,style=Bold"
 
-$HelloWorldForm.Controls.AddRange(@($lbltitle, $btnYes, $btnNo, $btnStart, $lblbody, $SupportLabel))
+$HelloWorldForm.Controls.AddRange(@($lbltitle, $btnYes, $btnNo, $btnStart, $btnCC, $btnQSR, $btnTerm, $btnOO, $lblbody, $SupportLabel))
 
 #BTN start is visible right away when opening the GUI. Executes the SqServiceList function when clicked
 #This is also the start of the program.
