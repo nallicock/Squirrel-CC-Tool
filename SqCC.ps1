@@ -36,25 +36,32 @@
     $btnStart.Visible = $false
     $btnYes.Visible = $false
     $btnNo.Visible = $false
+    $btnOk.Visible = $false
 
     #btnCC Properties
     $btnCC.Visible = $true
     $btnCC.Location = "100, 100"
+    $btnCC.Add_Click({SqCCService})
 
     #btnQSR Properties
     $btnQSR.Visible = $true
     $btnQSR.Location = "600, 100"
+    $btnQSR.Add_Click({SqQSRService})
     
     #btnOO Properties
     $btnOO.Visible = $true
     $btnOO.Location = "100, 350"
+    $btnOO.Add_Click({SqOnlineOrderService})
 
     #btnTerm Properties
     $btnTerm.Visible = $true
     $btnTerm.Location = "600, 350"
+    $btnTerm.Add_Click({SqTerminalsService})
  }
+
  function Get-SqService($srvName)
 {
+    NoButtons
     $currentTime = Get-Date -DisplayHint DateTime
     #after starting the script, remove the start button from screen
     $btnStart.Visible=$false
@@ -159,8 +166,14 @@
 #remove all buttons from screen for a cleaner appearance
 function NoButtons()
 {
+    $btnStart.Visible = $false
     $btnYes.Visible = $false
     $btnNo.Visible = $false
+    $btnOk.Visible = $false
+    $btnCC.Visible = $false
+    $btnQSR.Visible = $false
+    $btnOO.Visible = $false
+    $btnTerm.Visible = $false
 }
 #Display the following if the user clicks NO for "Are your credit cards now working?"
 function NotWorking()
@@ -196,46 +209,67 @@ function ClearList()
 }
 
 #check if the service is installed, and if it is, restart it (see the very top function, Get-SqService)
-function SqCCService ()
+
+function ConfirmWorking($msg)
 {
-    Get-SqService "Shift4"
-    Get-SqService "TGI"
-    Get-SqService "SqGateway"
-    Get-SqService "Moneris"
-    Get-SqService "STPI"
-    Get-SqService "Stunnel"
-    Get-SqService "SquirrelRelay53Bank"
-    Get-SqService "Elavon"
-    Get-SqService "SkyTab"
-    Get-SqService "eLaunch"
-    Get-SqService "Counter"
-    Get-SqService "PAX Agent Service"
-    Get-SqService "CayanService"
-    Get-SqService "FCCMiddleService"
-    Get-SqService "FreedomPay"
-    Get-SqService "CRM"
-    Get-SqService "Paytronix"
-    Get-SqService "SquirrelPXC"
-    Get-SqService "SquirrelRelayBuyATab"
-    Get-SqService "SqMatrix"
-    WriteToLogFile "`n-------------------------------------------------------`n"
-    
-    Start-Sleep -Seconds 2
-    Write-Host "Confirm if CCs are working -- YES or NO"
-    
     $lbltitle.Text = "Squirrel Systems Fix Utility"
     $lblbody.Location = "150,425"
     $lblbody.Font="Verdana,15,style=Bold"
-    $lblbody.text = "Are your credit cards now working? YES or NO?"
+    $lblbody.text = "Are your $msg now working? YES or NO?"
     $btnYes.Visible = $true
     $btnNo.Visible = $true
     $btnYes.Add_Click({ YesWorking })
     $btnNo.Add_Click({ NotWorking })
 }
+function SqCCService ()
+{
+    Get-SqService "Shift4"
+    Get-SqService "TGI"
+    Get-SqService "SqGateway"
+    # Get-SqService "Moneris"
+    # Get-SqService "STPI"
+    # Get-SqService "Stunnel"
+    # Get-SqService "SquirrelRelay53Bank"
+    # Get-SqService "Elavon"
+    # Get-SqService "SkyTab"
+    # Get-SqService "eLaunch"
+    # Get-SqService "Counter"
+    # Get-SqService "PAX Agent Service"
+    # Get-SqService "CayanService"
+    # Get-SqService "FCCMiddleService"
+    # Get-SqService "SquirrelLogansCC"
+    # Get-SqService "FreedomPay"
+    # Get-SqService "CRM"
+    # Get-SqService "Paytronix"
+    # Get-SqService "SquirrelPXC"
+    # Get-SqService "SquirrelRelayBuyATab"
+    # Get-SqService "SqMatrix"
+    WriteToLogFile "`n-------------------------------------------------------`n"
+    
+    Start-Sleep -Seconds 2
+    Write-Host "Confirm if CCs are working -- YES or NO"
+    ConfirmWorking("Credit Cards")
+    
+}
 
 function SqQSRService()
 {
     Get-SqService "QSR"
+    ConfirmWorking("Kitchen Screens")
+}
+
+function SqOnlineOrderService()
+{
+    Get-SqService "OLO Agent"
+    Get-SqService "OComm"
+    Get-SqService "eLaunch"
+    ConfirmWorking("Online Orders")
+}
+
+function SqTerminalsService()
+{
+    NoButtons
+    ConfirmWorking("Terminals")
 }
 
 Add-Type -AssemblyName System.Windows.Forms
@@ -324,6 +358,17 @@ $btnNo.Visible = $false
 $btnNo.Location=New-Object System.Drawing.Point(650,250)
 $btnNo.Font="Verdana,20,style=Bold"
 
+#OK BUTTON
+$btnOk=New-Object $ButtonObject
+$btnOk.Text = "OK"
+$btnOk.ForeColor = "White"
+$btnOk.BackColor = "#333333"
+$btnOk.AutoSize=$false
+$btnOk.Size="200,75"
+$btnOk.Visible = $false
+$btnOk.Location=New-Object System.Drawing.Point(650,250)
+$btnOk.Font="Verdana,20,style=Bold"
+
 #CC FIX BUTTON
 $btnCC=New-Object $ButtonObject
 $btnCC.Text = "Credit Cards"
@@ -368,7 +413,7 @@ $btnTerm.Visible = $false
 $btnTerm.Location=New-Object System.Drawing.Point(650,250)
 $btnTerm.Font="Verdana,20,style=Bold"
 
-$HelloWorldForm.Controls.AddRange(@($lbltitle, $btnYes, $btnNo, $btnStart, $btnCC, $btnQSR, $btnTerm, $btnOO, $lblbody, $SupportLabel))
+$HelloWorldForm.Controls.AddRange(@($lbltitle, $btnYes, $btnNo, $btnOk,  $btnStart, $btnCC, $btnQSR, $btnTerm, $btnOO, $lblbody, $SupportLabel))
 
 #BTN start is visible right away when opening the GUI. Executes the SqServiceList function when clicked
 #This is also the start of the program.
