@@ -299,6 +299,7 @@ function SqOnlineOrderService()
     Get-SqService "OLO Agent"
     Get-SqService "OComm"
     Get-SqService "eLaunch"
+    Get-SqService "SqGateway"
     ConfirmWorking("Online Orders")
 }
 
