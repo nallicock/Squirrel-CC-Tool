@@ -23,6 +23,11 @@
     Add-Content $logFilePath -Value $message
  }
  $highestMem = 0
+
+ function Home-Screen()
+ {
+
+ }
  function Get-SqService($srvName)
 {
     $currentTime = Get-Date -DisplayHint DateTime
@@ -289,10 +294,54 @@ $btnNo.Visible = $false
 $btnNo.Location=New-Object System.Drawing.Point(650,250)
 $btnNo.Font="Verdana,20,style=Bold"
 
+#CC FIX BUTTON
+$btnCC=New-Object $ButtonObject
+$btnCC.Text = "NO"
+$btnCC.ForeColor = "White"
+$btnCC.BackColor = "#333333"
+$btnCC.AutoSize=$false
+$btnCC.Size="200,75"
+$btnCC.Visible = $false
+$btnCC.Location=New-Object System.Drawing.Point(650,250)
+$btnCC.Font="Verdana,20,style=Bold"
+
+#QSR BUTTON
+$btnNo=New-Object $ButtonObject
+$btnQSR.Text = "NO"
+$btnQSR.ForeColor = "White"
+$btnQSR.BackColor = "#333333"
+$btnQSR.AutoSize=$false
+$btnQSR.Size="200,75"
+$btnQSR.Visible = $false
+$btnQSR.Location=New-Object System.Drawing.Point(650,250)
+$btnQSR.Font="Verdana,20,style=Bold"
+
+#ONLINE ORDER BUTTON
+$btnOO=New-Object $ButtonObject
+$btnOO.Text = "NO"
+$btnOO.ForeColor = "White"
+$btnOO.BackColor = "#333333"
+$btnOO.AutoSize=$false
+$btnOO.Size="200,75"
+$btnOO.Visible = $false
+$btnOO.Location=New-Object System.Drawing.Point(650,250)
+$btnOO.Font="Verdana,20,style=Bold"
+
+#TERMINALS BUTTON
+$btnTerm=New-Object $ButtonObject
+$btnTerm.Text = "NO"
+$btnTerm.ForeColor = "White"
+$btnTerm.BackColor = "#333333"
+$btnTerm.AutoSize=$false
+$btnTerm.Size="200,75"
+$btnTerm.Visible = $false
+$btnTerm.Location=New-Object System.Drawing.Point(650,250)
+$btnTerm.Font="Verdana,20,style=Bold"
+
 $HelloWorldForm.Controls.AddRange(@($lbltitle, $btnYes, $btnNo, $btnStart, $lblbody, $SupportLabel))
 
 #BTN start is visible right away when opening the GUI. Executes the SqServiceList function when clicked
 #This is also the start of the program.
-$btnStart.Add_Click({ SqCCService })
+$btnStart.Add_Click({ Home-Screen })
 
 $HelloWorldForm.ShowDialog()
