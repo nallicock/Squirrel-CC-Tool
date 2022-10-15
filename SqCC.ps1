@@ -31,12 +31,10 @@
  }
  function Home-Screen()
  {
+    NoButtons
+    NoLinks
     $lbltitle.Text = "What Is Not Working?"
     $lbltitle.Location = "250, 50"
-    $btnStart.Visible = $false
-    $btnYes.Visible = $false
-    $btnNo.Visible = $false
-    $btnOk.Visible = $false
 
     #btnCC Properties
     $btnCC.Visible = $true
@@ -84,13 +82,13 @@
 
  function Get-SqService($srvName)
 {
+    $serviceNum = 0
     NoButtons
     $currentTime = Get-Date -DisplayHint DateTime
     #after starting the script, remove the start button from screen
     $btnStart.Visible=$false
     $services = Get-Service -DisplayName *$srvName* 
-    $serviceNum = 0
-        foreach($service in $services){
+    foreach($service in $services){
         ++$serviceNum
     }
     #perform this if statement if there are no services that match the function parameter
@@ -163,6 +161,7 @@
             }
         #perform this elseif when the service is not SqGateway
         elseif($srvName -NE "SqGateway") {
+            Restarting-Services
             Start-Sleep -Seconds 2
             WriteToLogFile "Attempting to restart $srvName service(s) at: $currentTime`n"
             $lbltitle.Text="Restarting services, please wait"
@@ -203,6 +202,12 @@ function NoButtons()
     $btnData.Visible = $false
     $btnCRM.Visible = $false
 }
+
+function NoLinks()
+{
+    $SupportLabel.Visible = $false
+    $lblbody.Text = ""
+}
 #Display the following if the user clicks NO for "Are your credit cards now working?"
 function NotWorking()
 {
@@ -216,6 +221,7 @@ function NotWorking()
     "Please call our Solution Center at: 1-800-288-8160 for further troubleshooting.
     `nFor more ways of contacting support, see:" 
     NoButtons
+    $btnOk.Visible = $true
 }
 
 #Display the following if the user clicks YES for "Are your credit cards now working?"
@@ -228,6 +234,7 @@ function YesWorking()
      $lblbody.Font = "Verdana,10,style=Bold"
      $lblbody.Location = "25, 150"
      NoButtons
+     $btnOk.Visible = $true
 }
 
 function ClearList()
@@ -299,7 +306,6 @@ function SqTerminalsService()
 {
     NoButtons
     Term-Screen
-    
 }
 
 Add-Type -AssemblyName System.Windows.Forms
@@ -396,8 +402,9 @@ $btnOk.BackColor = "#333333"
 $btnOk.AutoSize=$false
 $btnOk.Size="200,75"
 $btnOk.Visible = $false
-$btnOk.Location=New-Object System.Drawing.Point(650,250)
+$btnOk.Location=New-Object System.Drawing.Point(330, 350)
 $btnOk.Font="Verdana,20,style=Bold"
+$btnOk.Add_Click({$HelloWorldForm.Close()})
 
 #CC FIX BUTTON
 $btnCC=New-Object $ButtonObject
