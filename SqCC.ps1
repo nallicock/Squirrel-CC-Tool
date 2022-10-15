@@ -59,6 +59,29 @@
     $btnTerm.Add_Click({SqTerminalsService})
  }
 
+ function Term-Screen()
+ {
+    $lbltitle.Text = "What Is Showing On Your Terminals?"
+    $lbltitle.Location = "100, 50"
+    NoButtons
+
+    #Host is busy
+    $btnHost.Visible = $true
+    $btnHost.Location = "100, 100"
+
+    #Searching for server
+    $btnSFS.Visible = $true
+    $btnSFS.Location = "600, 100"
+    
+    #Loading Data
+    $btnData.Visible = $true
+    $btnData.Location = "100, 350"
+
+    #btnTerm Properties
+    $btnCRM.Visible = $true
+    $btnCRM.Location = "600, 350"
+ }
+
  function Get-SqService($srvName)
 {
     NoButtons
@@ -140,6 +163,7 @@
             }
         #perform this elseif when the service is not SqGateway
         elseif($srvName -NE "SqGateway") {
+            Start-Sleep -Seconds 2
             WriteToLogFile "Attempting to restart $srvName service(s) at: $currentTime`n"
             $lbltitle.Text="Restarting services, please wait"
             $lbltitle.Location = "125, 100"
@@ -174,6 +198,10 @@ function NoButtons()
     $btnQSR.Visible = $false
     $btnOO.Visible = $false
     $btnTerm.Visible = $false
+    $btnHost.Visible = $false
+    $btnSFS.Visible = $false
+    $btnData.Visible = $false
+    $btnCRM.Visible = $false
 }
 #Display the following if the user clicks NO for "Are your credit cards now working?"
 function NotWorking()
@@ -198,7 +226,7 @@ function YesWorking()
      $SupportLabel.Location = "275, 167"
      $lblbody.text = "If you would like to launch an investigation`nfor the root cause, please see:`nOr call us at: 1-800-288-8160"
      $lblbody.Font = "Verdana,10,style=Bold"
-     $lblbody.Location = "50, 150"
+     $lblbody.Location = "25, 150"
      NoButtons
 }
 
@@ -213,6 +241,7 @@ function ClearList()
 function ConfirmWorking($msg)
 {
     $lbltitle.Text = "Squirrel Systems Fix Utility"
+    $lbltitle.Location = "185, 50"
     $lblbody.Location = "150,425"
     $lblbody.Font="Verdana,15,style=Bold"
     $lblbody.text = "Are your $msg now working? YES or NO?"
@@ -269,7 +298,8 @@ function SqOnlineOrderService()
 function SqTerminalsService()
 {
     NoButtons
-    ConfirmWorking("Terminals")
+    Term-Screen
+    
 }
 
 Add-Type -AssemblyName System.Windows.Forms
@@ -413,7 +443,51 @@ $btnTerm.Visible = $false
 $btnTerm.Location=New-Object System.Drawing.Point(650,250)
 $btnTerm.Font="Verdana,20,style=Bold"
 
-$HelloWorldForm.Controls.AddRange(@($lbltitle, $btnYes, $btnNo, $btnOk,  $btnStart, $btnCC, $btnQSR, $btnTerm, $btnOO, $lblbody, $SupportLabel))
+#HOST IS BUSY
+$btnHost=New-Object $ButtonObject
+$btnHost.Text = "Host Is Busy"
+$btnHost.ForeColor = "White"
+$btnHost.BackColor = "#333333"
+$btnHost.AutoSize=$false
+$btnHost.Size="230,75"
+$btnHost.Visible = $false
+$btnHost.Location=New-Object System.Drawing.Point(650,250)
+$btnHost.Font="Verdana,12,style=Bold"
+
+#SEARCHING FOR SERVER
+$btnSFS=New-Object $ButtonObject
+$btnSFS.Text = "Searching for Server"
+$btnSFS.ForeColor = "White"
+$btnSFS.BackColor = "#333333"
+$btnSFS.AutoSize=$false
+$btnSFS.Size="230,75"
+$btnSFS.Visible = $false
+$btnSFS.Location=New-Object System.Drawing.Point(650,250)
+$btnSFS.Font="Verdana,12,style=Bold"
+
+#LOADING DATA/IMAGE 0/1
+$btnData=New-Object $ButtonObject
+$btnData.Text = "Loading Data Page 0 Image 1"
+$btnData.ForeColor = "White"
+$btnData.BackColor = "#333333"
+$btnData.AutoSize=$false
+$btnData.Size="230,75"
+$btnData.Visible = $false
+$btnData.Location=New-Object System.Drawing.Point(650,250)
+$btnData.Font="Verdana,12,style=Bold"
+
+#CRM INTERFACE
+$btnCRM=New-Object $ButtonObject
+$btnCRM.Text = "CRM Interface Is Not Turned On"
+$btnCRM.ForeColor = "White"
+$btnCRM.BackColor = "#333333"
+$btnCRM.AutoSize=$false
+$btnCRM.Size="230,75"
+$btnCRM.Visible = $false
+$btnCRM.Location=New-Object System.Drawing.Point(650,250)
+$btnCRM.Font="Verdana,12,style=Bold"
+
+$HelloWorldForm.Controls.AddRange(@($lbltitle, $btnYes, $btnNo, $btnOk,  $btnStart, $btnCC, $btnQSR, $btnTerm, $btnOO, $btnHost, $btnSFS, $btnData, $btnCRM, $lblbody, $SupportLabel))
 
 #BTN start is visible right away when opening the GUI. Executes the SqServiceList function when clicked
 #This is also the start of the program.
