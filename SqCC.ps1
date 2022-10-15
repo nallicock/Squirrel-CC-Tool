@@ -167,7 +167,7 @@ function ClearList()
 }
 
 #check if the service is installed, and if it is, restart it (see the very top function, Get-SqService)
-function SqServiceList ()
+function SqCCService ()
 {
     Get-SqService "Shift4"
     Get-SqService "TGI"
@@ -293,6 +293,6 @@ $HelloWorldForm.Controls.AddRange(@($lbltitle, $btnYes, $btnNo, $btnStart, $lblb
 
 #BTN start is visible right away when opening the GUI. Executes the SqServiceList function when clicked
 #This is also the start of the program.
-$btnStart.Add_Click({ SqServiceList })
+$btnStart.Add_Click({ SqCCService })
 
 $HelloWorldForm.ShowDialog()
