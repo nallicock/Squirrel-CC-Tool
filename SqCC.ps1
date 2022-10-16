@@ -65,7 +65,7 @@
 
     #Host is busy
     $btnHost.Visible = $true
-    $btnHost.Location = "100, 100"
+    $btnHost.Location = "50, 100"
 
     #Searching for server
     $btnSFS.Visible = $true
@@ -73,7 +73,7 @@
     
     #Loading Data
     $btnData.Visible = $true
-    $btnData.Location = "100, 350"
+    $btnData.Location = "50, 350"
 
     #btnTerm Properties
     $btnCRM.Visible = $true
@@ -218,7 +218,7 @@ function NotWorking()
     $lbltitle.text = "Contact Support"
     $lbltitle.Location = "250, 100"
     $SupportLabel.Visible=$true
-    $SupportLabel.Location = "275, 167"
+    $SupportLabel.Location = "390, 183"
     $lblbody.text = 
     "Please call our Solution Center at: 1-800-288-8160 for further troubleshooting.
     `nFor more ways of contacting support, see:" 
