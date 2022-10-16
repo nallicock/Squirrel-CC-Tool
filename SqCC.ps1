@@ -24,12 +24,12 @@
  }
  $highestMem = 0
 
- function Restarting-Services()
+ function RestartingServices()
  {
     $lbltitle.Text="Restarting services, please wait"
-    $lbltitle.Location = "125, 100"
+    $lbltitle.Location = "175, 50"
  }
- function Home-Screen()
+ function HomeScreen()
  {
     NoButtons
     NoLinks
@@ -57,7 +57,7 @@
     $btnTerm.Add_Click({SqTerminalsService})
  }
 
- function Term-Screen()
+ function TermScreen()
  {
     $lbltitle.Text = "What Is Showing On Your Terminals?"
     $lbltitle.Location = "100, 50"
@@ -82,6 +82,7 @@
 
  function Get-SqService($srvName)
 {
+    $lbltitle.Text = "Searching for services..."
     $serviceNum = 0
     NoButtons
     $currentTime = Get-Date -DisplayHint DateTime
@@ -99,7 +100,7 @@
         elseif ($srvName -EQ "SqGateway") {
             Start-Sleep -Seconds 1
             Write-Host "Please wait... restarting SqGateway"
-            Restarting-Services
+            RestartingServices
             #begin testing to see if there are more than 1 javaw's(Giordanos has more than 1 javaw)
 
             #javaw process array
@@ -161,7 +162,7 @@
             }
         #perform this elseif when the service is not SqGateway
         elseif($srvName -NE "SqGateway") {
-            Restarting-Services
+            RestartingServices
             Start-Sleep -Seconds 2
             WriteToLogFile "Attempting to restart $srvName service(s) at: $currentTime`n"
             $lbltitle.Text="Restarting services, please wait"
@@ -217,6 +218,7 @@ function NotWorking()
     $lbltitle.text = "Contact Support"
     $lbltitle.Location = "250, 100"
     $SupportLabel.Visible=$true
+    $SupportLabel.Location = "275, 167"
     $lblbody.text = 
     "Please call our Solution Center at: 1-800-288-8160 for further troubleshooting.
     `nFor more ways of contacting support, see:" 
@@ -229,8 +231,9 @@ function YesWorking()
 {
      $SupportLabel.BringToFront()
      $SupportLabel.Visible = $true
-     $SupportLabel.Location = "275, 167"
-     $lblbody.text = "If you would like to launch an investigation`nfor the root cause, please see:`nOr call us at: 1-800-288-8160"
+     $SupportLabel.Location = "347, 182"
+     $lblbody.text =     "If you would to know the root cause of these issues, please call our Solution Center at: 1-800-288-8160.
+    `nFor more ways of contacting support, see:" 
      $lblbody.Font = "Verdana,10,style=Bold"
      $lblbody.Location = "25, 150"
      NoButtons
@@ -244,7 +247,6 @@ function ClearList()
 }
 
 #check if the service is installed, and if it is, restart it (see the very top function, Get-SqService)
-
 function ConfirmWorking($msg)
 {
     $lbltitle.Text = "Squirrel Systems Fix Utility"
@@ -306,7 +308,7 @@ function SqOnlineOrderService()
 function SqTerminalsService()
 {
     NoButtons
-    Term-Screen
+    TermScreen
 }
 
 Add-Type -AssemblyName System.Windows.Forms
@@ -499,6 +501,6 @@ $HelloWorldForm.Controls.AddRange(@($lbltitle, $btnYes, $btnNo, $btnOk,  $btnSta
 
 #BTN start is visible right away when opening the GUI. Executes the SqServiceList function when clicked
 #This is also the start of the program.
-$btnStart.Add_Click({ Home-Screen })
+$btnStart.Add_Click({ HomeScreen })
 
 $HelloWorldForm.ShowDialog()
